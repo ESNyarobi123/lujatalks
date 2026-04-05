@@ -1,0 +1,109 @@
+@import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Inter', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-ivory: #EEEBD9;
+    --color-smoke: #282427;
+    --color-terra: #BC6C25;
+
+    /* Mapping Ivory/Smoke to Zinc so Flux UI inherits naturally */
+    --color-zinc-50: #FAF8F0;
+    --color-zinc-100: #EEEBD9;
+    --color-zinc-200: #D1CFC0;
+    --color-zinc-300: #BDBBAb;
+    --color-zinc-400: #A3A191;
+    --color-zinc-500: #878477;
+    --color-zinc-600: #6E6A60;
+    --color-zinc-700: #4B464B;
+    --color-zinc-800: #3D383C;
+    --color-zinc-900: #282427;
+
+    /* Override standard blue to act as Terracotta (Accent) */
+    --color-blue-100: #F3EAE1;
+    --color-blue-400: #D18944;
+    --color-blue-500: #BC6C25;
+    --color-blue-600: #A65D1F;
+    --color-blue-800: #754010;
+
+    --color-accent: var(--color-neutral-800);
+    --color-accent-content: var(--color-neutral-800);
+    --color-accent-foreground: var(--color-white);
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-white);
+        --color-accent-content: var(--color-white);
+        --color-accent-foreground: var(--color-neutral-800);
+    }
+}
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+
+    /* Smooth scroll */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Better prose for post content */
+    .prose img {
+        border-radius: 1rem;
+    }
+
+    .prose blockquote {
+        border-left-width: 4px;
+    }
+}
+
+/* Flux UI overrides */
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+/* Alpine.js cloak */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Micro-animations */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.3s ease-out;
+}
