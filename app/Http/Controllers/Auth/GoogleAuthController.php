@@ -103,8 +103,15 @@ class GoogleAuthController extends Controller
      */
     private function googleOAuthReady(): bool
     {
-        return interface_exists(SocialiteFactory::class)
-            && filled(config('services.google.client_id'))
+        if (! interface_exists(SocialiteFactory::class)) {
+            return false;
+        }
+
+        if (! app()->bound(SocialiteFactory::class)) {
+            return false;
+        }
+
+        return filled(config('services.google.client_id'))
             && filled(config('services.google.client_secret'))
             && filled(config('services.google.redirect'));
     }
