@@ -5,6 +5,14 @@
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
 
+        <x-auth-google-button :label="__('Sign up with Google')" class="font-black" />
+
+        <div class="relative flex items-center py-1">
+            <div class="grow border-t border-[#282427]/10"></div>
+            <span class="mx-4 shrink-0 text-xs font-bold uppercase tracking-wider text-[#282427]/45">{{ __('Or') }}</span>
+            <div class="grow border-t border-[#282427]/10"></div>
+        </div>
+
         <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-6">
             @csrf
             <!-- Name -->
