@@ -11,27 +11,24 @@
 </head>
 
 <body
-    class="bg-[#EEEBD9] font-sans antialiased text-[#282427] min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+    class="bg-[#EEEBD9] font-sans antialiased text-[#282427] min-h-screen flex items-center justify-center px-4 py-6 sm:px-6 sm:py-8 relative overflow-x-hidden">
 
-    {{-- Artistic Background --}}
-    <div class="absolute -top-40 -left-40 w-[600px] h-[600px] bg-[#BC6C25]/10 blur-[120px] rounded-full -z-10"></div>
-    <div class="absolute -bottom-40 -right-40 w-[600px] h-[600px] bg-[#282427]/5 blur-[120px] rounded-full -z-10"></div>
+    {{-- Background accents (scaled down on small screens) --}}
+    <div class="pointer-events-none absolute -top-32 -left-32 size-[min(100vw,28rem)] bg-[#BC6C25]/10 blur-[80px] rounded-full -z-10 sm:-top-40 sm:-left-40 sm:size-[36rem] sm:blur-[100px]"></div>
+    <div class="pointer-events-none absolute -bottom-32 -right-32 size-[min(100vw,28rem)] bg-[#282427]/5 blur-[80px] rounded-full -z-10 sm:-bottom-40 sm:-right-40 sm:size-[36rem] sm:blur-[100px]"></div>
 
     <div
-        class="flex w-full max-w-lg flex-col gap-8 bg-white/70 backdrop-blur-xl p-10 md:p-14 rounded-[40px] shadow-[0_30px_60px_rgba(40,36,39,0.08)] border border-[#282427]/5 relative z-10">
+        class="flex w-full max-w-[22rem] flex-col gap-5 rounded-2xl border border-[#282427]/5 bg-white/80 p-5 shadow-[0_20px_50px_rgba(40,36,39,0.07)] backdrop-blur-xl sm:max-w-md sm:gap-6 sm:rounded-3xl sm:p-7 md:p-8 relative z-10">
 
-        {{-- Custom Brand Logo --}}
-        {{-- Full reload: avoids Livewire navigate + classic Fortify forms mixing (empty POST fields / CSRF quirks). --}}
-        <a href="{{ url('/') }}" class="flex flex-col items-center gap-4 group mx-auto mb-4">
-            <x-luja-mark size="xl" class="group-hover:-translate-y-1 transition-transform duration-300" />
-            <span class="text-3xl font-black tracking-tight text-[#282427]"><span
+        {{-- Brand --}}
+        <a href="{{ url('/') }}" class="group mx-auto flex flex-col items-center gap-2 sm:gap-2.5">
+            <x-luja-mark size="md" class="group-hover:-translate-y-0.5 transition-transform duration-300" />
+            <span class="text-lg font-black tracking-tight text-[#282427] sm:text-xl md:text-2xl"><span
                     class="text-[#BC6C25]">Luja</span>Talks.</span>
         </a>
 
-        {{-- Auth Specific Content Injection --}}
-        <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-4 sm:gap-5">
             <style>
-                /* Overriding generic auth headers to match our style */
                 .text-zinc-600,
                 .text-zinc-500,
                 .text-zinc-400 {
@@ -45,25 +42,32 @@
                     color: #282427 !important;
                 }
 
-                /* Override buttons inside the form */
                 button[type="submit"] {
                     background-color: #BC6C25 !important;
                     color: white !important;
                     border: none !important;
                     border-radius: 9999px !important;
-                    padding-top: 1rem !important;
-                    padding-bottom: 1rem !important;
+                    padding-top: 0.625rem !important;
+                    padding-bottom: 0.625rem !important;
                     font-weight: 900 !important;
-                    font-size: 16px !important;
-                    box-shadow: 0 10px 25px rgba(188, 108, 37, 0.4) !important;
-                    transition: all 0.3s ease !important;
+                    font-size: 0.875rem !important;
+                    box-shadow: 0 8px 20px rgba(188, 108, 37, 0.35) !important;
+                    transition: all 0.2s ease !important;
                     width: 100% !important;
+                }
+
+                @media (min-width: 640px) {
+                    button[type="submit"] {
+                        padding-top: 0.75rem !important;
+                        padding-bottom: 0.75rem !important;
+                        font-size: 0.9375rem !important;
+                    }
                 }
 
                 button[type="submit"]:hover {
                     background-color: #a65d1f !important;
-                    transform: translateY(-2px) !important;
-                    box-shadow: 0 15px 35px rgba(188, 108, 37, 0.5) !important;
+                    transform: translateY(-1px) !important;
+                    box-shadow: 0 12px 28px rgba(188, 108, 37, 0.45) !important;
                 }
             </style>
             {{ $slot }}
