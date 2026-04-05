@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 use Laravel\Socialite\Two\InvalidStateException;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 use Throwable;
@@ -21,13 +21,13 @@ class GoogleAuthController extends Controller
      */
     public function redirect(): RedirectResponse|SymfonyRedirectResponse
     {
-        if (! $this->googleIsConfigured()) {
+        if (! $this->googleOAuthReady()) {
             return redirect()
                 ->route('login')
                 ->withErrors(['email' => __('Google sign-in is not configured.')]);
         }
 
-        return Socialite::driver('google')->redirect();
+        return $this->socialite()->driver('google')->redirect();
     }
 
     /**
@@ -35,14 +35,14 @@ class GoogleAuthController extends Controller
      */
     public function callback(Request $request): RedirectResponse
     {
-        if (! $this->googleIsConfigured()) {
+        if (! $this->googleOAuthReady()) {
             return redirect()
                 ->route('login')
                 ->withErrors(['email' => __('Google sign-in is not configured.')]);
         }
 
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $googleUser = $this->socialite()->driver('google')->user();
         } catch (InvalidStateException) {
             return redirect()
                 ->route('login')
@@ -98,10 +98,19 @@ class GoogleAuthController extends Controller
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
-    private function googleIsConfigured(): bool
+    /**
+     * Socialite must be installed (composer) and OAuth env vars must be set.
+     */
+    private function googleOAuthReady(): bool
     {
-        return filled(config('services.google.client_id'))
+        return interface_exists(SocialiteFactory::class)
+            && filled(config('services.google.client_id'))
             && filled(config('services.google.client_secret'))
             && filled(config('services.google.redirect'));
+    }
+
+    private function socialite(): SocialiteFactory
+    {
+        return app(SocialiteFactory::class);
     }
 }

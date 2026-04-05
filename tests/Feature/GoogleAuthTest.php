@@ -2,8 +2,8 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 use Laravel\Socialite\Contracts\Provider;
-use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\User as SocialiteGoogleUser;
 
@@ -38,7 +38,9 @@ test('google redirect delegates to socialite when configured', function () {
         redirect('https://accounts.google.com/o/oauth2/v2/auth?client=test')
     );
 
-    Socialite::shouldReceive('driver')->once()->with('google')->andReturn($provider);
+    $factory = Mockery::mock(SocialiteFactory::class);
+    $factory->shouldReceive('driver')->once()->with('google')->andReturn($provider);
+    $this->app->instance(SocialiteFactory::class, $factory);
 
     $response = $this->get(route('auth.google.redirect'));
 
@@ -57,7 +59,9 @@ test('google callback registers a new user and logs them in', function () {
     $provider = Mockery::mock(Provider::class);
     $provider->shouldReceive('user')->once()->andReturn($socialUser);
 
-    Socialite::shouldReceive('driver')->once()->with('google')->andReturn($provider);
+    $factory = Mockery::mock(SocialiteFactory::class);
+    $factory->shouldReceive('driver')->once()->with('google')->andReturn($provider);
+    $this->app->instance(SocialiteFactory::class, $factory);
 
     $this->assertDatabaseMissing('users', ['email' => 'newgoogle@example.com']);
 
@@ -88,7 +92,9 @@ test('google callback links google id to an existing email account', function ()
     $provider = Mockery::mock(Provider::class);
     $provider->shouldReceive('user')->once()->andReturn($socialUser);
 
-    Socialite::shouldReceive('driver')->once()->with('google')->andReturn($provider);
+    $factory = Mockery::mock(SocialiteFactory::class);
+    $factory->shouldReceive('driver')->once()->with('google')->andReturn($provider);
+    $this->app->instance(SocialiteFactory::class, $factory);
 
     $this->get(route('auth.google.callback'))
         ->assertRedirect(route('dashboard', absolute: false));
@@ -104,7 +110,9 @@ test('google callback redirects to login when oauth state is invalid', function 
     $provider = Mockery::mock(Provider::class);
     $provider->shouldReceive('user')->once()->andThrow(new InvalidStateException);
 
-    Socialite::shouldReceive('driver')->once()->with('google')->andReturn($provider);
+    $factory = Mockery::mock(SocialiteFactory::class);
+    $factory->shouldReceive('driver')->once()->with('google')->andReturn($provider);
+    $this->app->instance(SocialiteFactory::class, $factory);
 
     $this->get(route('auth.google.callback'))
         ->assertRedirect(route('login', absolute: false))

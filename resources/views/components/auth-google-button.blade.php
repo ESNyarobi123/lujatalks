@@ -3,7 +3,9 @@
 ])
 
 @php
-    $configured = filled(config('services.google.client_id'))
+    $socialiteInstalled = interface_exists(\Laravel\Socialite\Contracts\Factory::class);
+    $configured = $socialiteInstalled
+        && filled(config('services.google.client_id'))
         && filled(config('services.google.client_secret'))
         && filled(config('services.google.redirect'));
 @endphp
